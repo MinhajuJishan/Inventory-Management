@@ -1,33 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
-// Node structure to represent each inventory item
+
 struct Node {
     char name[50];
     int quantity;
     struct Node* next;
 };
 
-// LinkedList structure to manage items
 struct Inventory {
     struct Node* head;
 };
 
-// Function to create a new node
 struct Node* createNode(const char* itemName, int itemQuantity) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
     if (newNode != NULL) {
         strncpy(newNode->name, itemName, sizeof(newNode->name) - 1);
-        newNode->name[sizeof(newNode->name) - 1] = '\0'; // Ensure null-termination
+        newNode->name[sizeof(newNode->name) - 1] = '\0';
         newNode->quantity = itemQuantity;
         newNode->next = NULL;
     }
     return newNode;
 }
 
-// Function to add a new item to the inventory
+
 void addItem(struct Inventory* inventory, const char* itemName, int quantity) {
     struct Node* newNode = createNode(itemName, quantity);
     if (newNode != NULL) {
@@ -39,7 +36,6 @@ void addItem(struct Inventory* inventory, const char* itemName, int quantity) {
     }
 }
 
-// Function to remove an item from the inventory
 void removeItem(struct Inventory* inventory, const char* itemName, int removeQuantity) {
     struct Node* current = inventory->head;
     struct Node* prev = NULL;
@@ -51,7 +47,6 @@ void removeItem(struct Inventory* inventory, const char* itemName, int removeQua
 
     if (current != NULL) {
         if (removeQuantity >= current->quantity) {
-            // Remove the entire node
             if (prev != NULL) {
                 prev->next = current->next;
             } else {
@@ -61,7 +56,7 @@ void removeItem(struct Inventory* inventory, const char* itemName, int removeQua
             free(current);
             printf("\nTask Completed Successfully.\n");
         } else {
-            // Remove a specific quantity
+
             current->quantity -= removeQuantity;
             printf("\nTask Completed Successfully.\n");
         }
@@ -70,7 +65,6 @@ void removeItem(struct Inventory* inventory, const char* itemName, int removeQua
     }
 }
 
-// Function to update the quantity of an existing item
 void updateItem(struct Inventory* inventory, const char* itemName) {
     struct Node* current = inventory->head;
 
@@ -88,7 +82,7 @@ void updateItem(struct Inventory* inventory, const char* itemName) {
             printf("Do you want to (A)dd or (S)ubtract quantity? ");
             if (scanf(" %9s", operation) != 1) {
                 printf("Invalid input. Please enter 'A' or 'S'.\n");
-                while (getchar() != '\n'); // Clear input buffer
+                while (getchar() != '\n');
             }
         } while (strcmp(operation, "A") != 0 && strcmp(operation, "a") != 0 &&
                  strcmp(operation, "S") != 0 && strcmp(operation, "s") != 0);
@@ -97,7 +91,9 @@ void updateItem(struct Inventory* inventory, const char* itemName) {
             printf("Enter quantity to update: ");
             if (scanf("%d", &updateQuantity) != 1) {
                 printf("Invalid input. Please enter a valid number.\n");
-                while (getchar() != '\n'); // Clear input buffer
+                while (getchar() != '\n');
+            } else if (updateQuantity < 0) {
+                printf("Invalid input. Quantity should be a non-negative number.\n");
             }
         } while (updateQuantity < 0);
 
@@ -119,7 +115,6 @@ void updateItem(struct Inventory* inventory, const char* itemName) {
     }
 }
 
-// Function to search for an item in the inventory
 struct Node* searchItem(const struct Inventory* inventory, const char* itemName) {
     struct Node* current = inventory->head;
 
@@ -130,10 +125,9 @@ struct Node* searchItem(const struct Inventory* inventory, const char* itemName)
         current = current->next;
     }
 
-    return NULL; // Item not found
+    return NULL;
 }
 
-// Function to display all items in the inventory
 void displayInventory(const struct Inventory* inventory) {
     struct Node* current = inventory->head;
     printf("\nInventory:\n");
@@ -144,7 +138,6 @@ void displayInventory(const struct Inventory* inventory) {
     printf("\nTask Completed Successfully.\n");
 }
 
-// Function to free memory allocated for the linked list
 void freeInventory(struct Inventory* inventory) {
     struct Node* current = inventory->head;
     struct Node* nextNode;
@@ -162,11 +155,27 @@ int main() {
     struct Inventory inventory;
     inventory.head = NULL;
 
-    // Interactive menu
     int choice;
     char itemName[50];
     int itemQuantity;
     int removeQuantity;
+
+    printf("Welcome! Please enter the password to log in.\n");
+
+    char adminUsername[] = "inventory";
+    char adminPassword[] = "123456";
+    char enteredUsername[50];
+    char enteredPassword[7];
+
+    printf("Username: %s\n", adminUsername);
+    printf("Password (6 digits): ");
+
+    while (scanf("%6s", enteredPassword) != 1 || strcmp(adminPassword, enteredPassword) != 0) {
+        printf("Invalid password. Please try again.\nPassword (6 digits): ");
+        while (getchar() != '\n');
+    }
+
+    printf("\nAdmin login successful.\n");
 
     do {
         printf("\n1. Add Item\n");
@@ -179,7 +188,7 @@ int main() {
 
         while (scanf("%d", &choice) != 1) {
             printf("Invalid input. Please enter a valid number.\n");
-            while (getchar() != '\n'); // Clear input buffer
+            while (getchar() != '\n');
         }
 
         switch (choice) {
@@ -187,7 +196,7 @@ int main() {
                 printf("Enter item name: ");
                 if (scanf("%49s", itemName) != 1) {
                     printf("Invalid input. Please enter a valid name.\n");
-                    while (getchar() != '\n'); // Clear input buffer
+                    while (getchar() != '\n');
                     break;
                 }
 
@@ -195,7 +204,7 @@ int main() {
                     printf("Enter quantity: ");
                     if (scanf("%d", &itemQuantity) != 1) {
                         printf("Invalid input. Please enter a valid number.\n");
-                        while (getchar() != '\n'); // Clear input buffer
+                        while (getchar() != '\n');
                     }
                 } while (itemQuantity < 0);
 
@@ -206,7 +215,7 @@ int main() {
                 printf("Enter item name to remove: ");
                 if (scanf("%49s", itemName) != 1) {
                     printf("Invalid input. Please enter a valid name.\n");
-                    while (getchar() != '\n'); // Clear input buffer
+                    while (getchar() != '\n');
                     break;
                 }
 
@@ -214,7 +223,7 @@ int main() {
                     printf("Enter quantity to remove: ");
                     if (scanf("%d", &removeQuantity) != 1) {
                         printf("Invalid input. Please enter a valid number.\n");
-                        while (getchar() != '\n'); // Clear input buffer
+                        while (getchar() != '\n');
                     }
                 } while (removeQuantity < 0);
 
@@ -225,7 +234,7 @@ int main() {
                 printf("Enter item name to update: ");
                 if (scanf("%49s", itemName) != 1) {
                     printf("Invalid input. Please enter a valid name.\n");
-                    while (getchar() != '\n'); // Clear input buffer
+                    while (getchar() != '\n');
                     break;
                 }
                 updateItem(&inventory, itemName);
@@ -235,7 +244,7 @@ int main() {
                 printf("Enter item name to search: ");
                 if (scanf("%49s", itemName) != 1) {
                     printf("Invalid input. Please enter a valid name.\n");
-                    while (getchar() != '\n'); // Clear input buffer
+                    while (getchar() != '\n');
                     break;
                 }
 
@@ -263,7 +272,7 @@ int main() {
 
     } while (choice != 6);
 
-    // Free allocated memory before exiting
+
     freeInventory(&inventory);
 
     return 0;
